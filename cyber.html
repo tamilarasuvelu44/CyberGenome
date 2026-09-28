@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Genome – AI Digital DNA & Cyber Attack Analysis Platform</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --bg-card: #111827;
+            --bg-card-hover: #1f293d;
+            --neon-green: #00ff66;
+            --neon-green-glow: rgba(0, 255, 102, 0.4);
+            --cyan: #00f0ff;
+            --cyan-glow: rgba(0, 240, 255, 0.4);
+            --danger-red: #ff0055;
+            --warning-amber: #ffaa00;
+            --border-cyan: rgba(0, 240, 255, 0.25);
+        }
+
+        body.bg-dark-cyber {
+            background-color: var(--bg-dark);
+            font-family: 'Rajdhani', sans-serif;
+            color: #e2e8f0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(0, 240, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(0, 255, 102, 0.05) 0%, transparent 40%);
+        }
+
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .font-mono { font-family: 'Share Tech Mono', monospace; }
+
+        /* Glowing effects & Theme borders */
+        .bg-cyber-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-cyan);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .bg-cyber-card:hover {
+            border-color: rgba(0, 240, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+        }
+
+        .text-neon-green { color: var(--neon-green) !important; text-shadow: 0 0 8px var(--neon-green-glow); }
+        .text-cyan { color: var(--cyan) !important; text-shadow: 0 0 8px var(--cyan-glow); }
+        .border-cyan { border-color: var(--border-cyan) !important; }
+
+        /* Custom buttons */
+        .btn-cyber-cyan {
+            background: linear-gradient(135deg, #00f0ff 0%, #0088cc 100%);
+            color: #000;
+            font-weight: 700;
+            border: none;
+            box-shadow: 0 0 10px var(--cyan-glow);
+            transition: all 0.2s ease;
+        }
+
+        .btn-cyber-cyan:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px var(--cyan-glow);
+            color: #000;
+        }
+
+        .btn-cyber-green {
+            background: linear-gradient(135deg, #00ff66 0%, #009933 100%);
+            color: #000;
+            font-weight: 700;
+            border: none;
+            box-shadow: 0 0 10px var(--neon-green-glow);
+            transition: all 0.2s ease;
+        }
+
+        .btn-cyber-green:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px var(--neon-green-glow);
+            color: #000;
+        }
+
+        /* Navigation Bar */
+        .navbar-cyber {
+            background-color: rgba(17, 24, 39, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-cyan);
+        }
+
+        .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            color: #94a3b8 !important;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            padding: 8px 16px !important;
+            border-radius: 6px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--cyan) !important;
+            background-color: rgba(0, 240, 255, 0.1);
+            text-shadow: 0 0 8px var(--cyan-glow);
+        }
+
+        /* View Router Management */
+        .app-view {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .app-view.active-view {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Animated Glowing DNA Helix Canvas */
+        #dnaCanvas {
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.05) 0%, rgba(10, 14, 23, 0.8) 100%);
+            border-radius: 12px;
+            border: 1px solid var(--border-cyan);
+            width: 100%;
+            height: 180px;
+        }
+
+        /* Terminal Console Styling */
+        .terminal-box {
+            background-color: #05080f;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            color: #33ffaa;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .terminal-box p {
+            margin-bottom: 4px;
+        }
+
+        /* Tables Custom Styling */
+        .table-cyber {
+            color: #cbd5e1;
+            border-color: rgba(0, 240, 255, 0.15);
+        }
+
+        .table-cyber th {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--cyan);
+            background-color: #0d131f;
+            border-bottom: 2px solid var(--border-cyan);
+        }
+
+        .table-cyber td {
+            background-color: var(--bg-card);
+            vertical-align: middle;
+        }
+
+        /* Status Badges */
+        .badge-safe { background-color: rgba(0, 255, 102, 0.15); color: #00ff66; border: 1px solid #00ff66; }
+        .badge-suspicious { background-color: rgba(255, 170, 0, 0.15); color: #ffaa00; border: 1px solid #ffaa00; }
+        .badge-danger { background-color: rgba(255, 0, 85, 0.15); color: #ff0055; border: 1px solid #ff0055; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0e17; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+    </style>
+</head>
+<body class="bg-dark-cyber">
+
+    <nav class="navbar navbar-expand-xl navbar-dark navbar-cyber sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="#" onclick="switchView('dashboard')">
+                <i class="bi bi-cpu-fill text-cyan fs-3 me-2"></i>
+                <span class="font-orbitron fw-bold text-neon-green fs-4">CYBER<span class="text-cyan">GENOME</span></span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#cyberNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="cyberNavbar">
+                <ul class="navbar-nav ms-auto align-items-center gap-1 my-2 my-xl-0">
+                    <li class="nav-item"><a class="nav-link active" id="nav-dashboard" onclick="switchView('dashboard')"><i class="bi bi-speedometer2 me-1"></i> DASHBOARD</a></li>
+                    <li class="nav-item"><a class="nav-link" id="nav-alerts" onclick="switchView('alerts')"><i class="bi bi-shield-exclamation me-1"></i> THREAT ALERTS</a></li>
+                    <li class="nav-item"><a class="nav-link" id="nav-blockchain" onclick="switchView('blockchain')"><i class="bi bi-link-45deg me-1"></i> BLOCKCHAIN LEDGER</a></li>
+                    <li class="nav-item"><a class="nav-link" id="nav-profile" onclick="switchView('profile')"><i class="bi bi-dna me-1"></i> DNA PROFILE</a></li>
+                    <li class="nav-item"><a class="nav-link" id="nav-reports" onclick="switchView('reports')"><i class="bi bi-file-earmark-bar-graph me-1"></i> REPORTS</a></li>
+                    <li class="nav-item"><a class="nav-link text-warning" id="nav-admin" onclick="switchView('admin')"><i class="bi bi-shield-lock-fill me-1"></i> ADMIN CENTER</a></li>
+                </ul>
+                <div class="ms-xl-3 d-flex align-items-center border-start border-cyan ps-xl-3 mt-2 mt-xl-0">
+                    <div class="text-end me-2">
+                        <div class="font-orbitron fs-7 text-neon-green" id="navUserHandle">OPERATOR_01</div>
+                        <div class="font-mono text-muted fs-8">SYS_ADMIN</div>
+                    </div>
+                    <i class="bi bi-person-circle fs-3 text-cyan"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid px-4 py-4">
+
+        <!-- VIEW 1: DASHBOARD -->
+        <div id="view-dashboard" class="app-view active-view">
+            <!-- Telemetry Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-cyber-card h-100">
+                        <div class="card-body d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="text-muted font-orbitron fs-7">IDENTITY STATUS</div>
+                                <h3 class="text-neon-green font-orbitron fw-bold mb-0">SYNTHESIZED</h3>
+                                <div class="font-mono text-cyan fs-8 mt-1"><i class="bi bi-check-circle-fill"></i> Fingerprint Match: 99.8%</div>
+                            </div>
+                            <i class="bi bi-fingerprint fs-1 text-neon-green opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-cyber-card h-100">
+                        <div class="card-body d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="text-muted font-orbitron fs-7">AI THREAT INDEX</div>
+                                <h3 class="text-cyan font-orbitron fw-bold mb-0" id="dashThreatIndex">12 / 100</h3>
+                                <div class="font-mono text-muted fs-8 mt-1" id="dashThreatStatus">System State: SAFE</div>
+                            </div>
+                            <i class="bi bi-shield-check fs-1 text-cyan opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-cyber-card h-100">
+                        <div class="card-body d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="text-muted font-orbitron fs-7">TOTAL LOGGED EVENTS</div>
+                                <h3 class="text-light font-orbitron fw-bold mb-0" id="dashTotalEvents">24</h3>
+                                <div class="font-mono text-neon-green fs-8 mt-1"><i class="bi bi-arrow-up-right"></i> Live Realtime Stream</div>
+                            </div>
+                            <i class="bi bi-activity fs-1 text-warning opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-cyber-card h-100">
+                        <div class="card-body d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="text-muted font-orbitron fs-7">BLOCKCHAIN INTEGRITY</div>
+                                <h3 class="text-neon-green font-orbitron fw-bold mb-0" id="dashChainStatus">VERIFIED</h3>
+                                <div class="font-mono text-muted fs-8 mt-1"><i class="bi bi-link-45deg"></i> Ledger Height: #<span id="dashBlockHeight">5</span></div>
+                            </div>
+                            <i class="bi bi-box-seam fs-1 text-neon-green opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Genome DNA Synthesizer Box -->
+            <div class="row g-3 mb-4">
+                <div class="col-lg-8">
+                    <div class="card bg-cyber-card">
+                        <div class="card-header bg-dark border-bottom border-cyan d-flex justify-content-between align-items-center py-2">
+                            <span class="font-orbitron text-cyan fw-bold"><i class="bi bi-dna me-2"></i>DIGITAL CYBER GENOME DNA VISUALIZER</span>
+                            <span class="badge badge-safe font-mono">SHA-256 ACTIVE</span>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="dnaCanvas"></canvas>
+                            <div class="mt-3">
+                                <label class="font-orbitron fs-7 text-muted">GENOME HASH SEQUENCER (EXTRACTED HARDWARE &amp; BROWSER ATTRIBUTES)</label>
+                                <div class="font-mono text-neon-green text-break p-2 bg-dark rounded border border-cyan fs-7" id="activeGenomeHash">
+                                    Calculating system hardware canvas fingerprint SHA-256 string...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card bg-cyber-card h-100">
+                        <div class="card-header bg-dark border-bottom border-cyan py-2">
+                            <span class="font-orbitron text-cyan fw-bold"><i class="bi bi-terminal me-2"></i>GENOME SYNTHESIS AUDIT</span>
+                        </div>
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div class="terminal-box" id="genomeTerminal">
+                                <p>[SYS_INIT] Requesting device environment canvas identity...</p>
+                                <p>[GENOME] Extracting Screen Resolution, User-Agent, WebGL Renderer...</p>
+                                <p>[CRYPTO] Executing client-side SHA-256 digest calculation...</p>
+                                <p>[SUCCESS] Cyber Genome DNA sequence established!</p>
+                            </div>
+                            <button class="btn btn-cyber-cyan w-100 font-orbitron fs-7 py-2 mt-3" onclick="reSynthesizeGenome()">
+                                <i class="bi bi-arrow-repeat me-1"></i> RE-SYNTHESIZE GENOME
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Attack Simulator & Charts -->
+            <div class="row g-3 mb-4">
+                <div class="col-12">
+                    <div class="card bg-cyber-card">
+                        <div class="card-header bg-dark border-bottom border-cyan">
+                            <span class="font-orbitron text-cyan fw-bold"><i class="bi bi-cpu me-2"></i>AI ISOLATION FOREST ATTACK VECTOR SIMULATOR</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted fs-7 mb-3">Simulate suspicious user activities or malicious exploits to test the AI threat evaluation model and auto-mine to the immutable ledger.</p>
+                            <div class="row g-2">
+                                <div class="col-6 col-md-3">
+                                    <button class="btn btn-outline-success w-100 py-3 font-orbitron fs-7" onclick="simulateAttack('Safe Traffic', 2, 10, 0, 0)">
+                                        <i class="bi bi-check-circle fs-4 d-block mb-1"></i> SAFE TRAFFIC
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <button class="btn btn-outline-warning w-100 py-3 font-orbitron fs-7" onclick="simulateAttack('Geo-Jump Anomaly', 18, 50, 1, 1800)">
+                                        <i class="bi bi-geo-alt fs-4 d-block mb-1"></i> GEO-JUMP (1800km)
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <button class="btn btn-outline-danger w-100 py-3 font-orbitron fs-7" onclick="simulateAttack('Brute Force Auth', 140, 5, 12, 0)">
+                                        <i class="bi bi-key-fill fs-4 d-block mb-1"></i> BRUTE FORCE
+                                    </button>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <button class="btn btn-outline-danger w-100 py-3 font-orbitron fs-7" onclick="simulateAttack('SQL Injection Exploitation', 95, 620, 2, 0)">
+                                        <i class="bi bi-code-slash fs-4 d-block mb-1"></i> SQL INJECTION
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Charts -->
+            <div class="row g-3">
+                <div class="col-lg-8">
+                    <div class="card bg-cyber-card">
+                        <div class="card-header bg-dark border-bottom border-cyan">
+                            <span class="font-orbitron text-cyan fw-bold"><i class="bi bi-graph-up me-2"></i>REAL-TIME THREAT SCORE TIMELINE</span>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="dashLineChart" height="110"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card bg-cyber-card">
+                        <div class="card-header bg-dark border-bottom border-cyan">
+                            <span class="font-orbitron text-cyan fw-bold"><i class="bi bi-pie-chart me-2"></i>RISK CLASSIFICATION</span>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="dashDoughnutChart" height="230"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: THREAT ALERTS -->
+        <div id="view-alerts" class="app-view">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="font-orbitron text-cyan mb-1"><i class="bi bi-shield-exclamation me-2"></i>THREAT ALERTS MATRIX</h2>
+                    <p class="text-muted font-mono fs-7 mb-0">Live threat detection evaluation engine powered by Isolation Forest algorithm.</p>
+                </div>
+                <button class="btn btn-cyber-cyan btn-sm font-orbitron" onclick="clearThreatAlerts()"><i class="bi bi-trash me-1"></i> CLEAR ALERTS LOG</button>
+            </div>
+
+            <div class="card bg-cyber-card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-cyber table-hover mb-0 font-mono">
+                            <thead>
+                                <tr>
+                                    <th>TIMESTAMP</th>
+                                    <th>ACTIVITY TYPE</th>
+                                    <th>THREAT SCORE</th>
+                                    <th>RISK PREDICTION</th>
+                                    <th>AI CONFIDENCE</th>
+                                    <th>STATUS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="alertsTableBody">
+                                <!-- Dynamic JS Population -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 3: BLOCKCHAIN LEDGER -->
+        <div id="view-blockchain" class="app-view">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="font-orbitron text-cyan mb-1"><i class="bi bi-link-45deg me-2"></i>IMMUTABLE BLOCKCHAIN SECURITY LEDGER</h2>
+                    <p class="text-muted font-mono fs-7 mb-0">Cryptographically linked SHA-256 audit trail for all digital identities and threats.</p>
+                </div>
+                <button class="btn btn-cyber-green font-orbitron fs-7" onclick="verifyLedgerIntegrity()">
+                    <i class="bi bi-shield-check me-1"></i> VERIFY LEDGER INTEGRITY
+                </button>
+            </div>
+
+            <div id="blockchainVerificationBanner" class="alert alert-success bg-dark border-cyan text-neon-green font-mono mb-4 d-flex align-items-center" role="alert">
+                <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                <div>
+                    <strong>BLOCKCHAIN INTEGRITY OK:</strong> All SHA-256 blocks are cryptographically linked and un-tampered.
+                </div>
+            </div>
+
+            <div class="row g-3" id="blockchainList">
+                <!-- Dynamic Blocks Population -->
+            </div>
+        </div>
+
+        <!-- VIEW 4: DNA PROFILE -->
+        <div id="view-profile" class="app-view">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card bg-cyber-card">
+                        <div class="card-header bg-dark border-bottom border-cyan text-center py-3">
+                            <h3 class="font-orbitron text-neon-green mb-0"><i class="bi bi-fingerprint me-2"></i>OPERATOR CYBER DNA PROFILE</h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="table-responsive">
+                                <table class="table table-dark table-borderless font-mono">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-cyan">OPERATOR HANDLE:</td>
+                                            <td class="text-light fw-bold" id="profileHandle">OPERATOR_01</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-cyan">SECURITY ROLE:</td>
+                                            <td><span class="badge bg-cyan text-dark font-orbitron">SYSTEM_ADMIN</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-cyan">EXTRACTED USER-AGENT:</td>
+                                            <td class="text-muted fs-7 text-break" id="profileUA">Loading...</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-cyan">SCREEN RESOLUTION:</td>
+                                            <td class="text-light" id="profileRes">1920 x 1080</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-cyan">TIMEZONE OFFSET:</td>
+                                            <td class="text-light" id="profileTZ">UTC+00:00</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-cyan">CYBER GENOME HASH:</td>
+                                            <td class="text-break text-neon-green fw-bold fs-7" id="profileHash">Generating...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-3 p-3 bg-dark rounded border border-cyan text-center">
+                                <div class="font-orbitron text-cyan fs-7 mb-2">CRYPTOGRAPHIC DNA KEY MATRIX</div>
+                                <div class="font-mono text-break text-muted fs-8" id="profileDnaMatrix">
+                                    01010011-01001000-01000001-00110010-00110101-00110110
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 5: SECURITY REPORTS -->
+        <div id="view-reports" class="app-view">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="font-orbitron text-cyan mb-1"><i class="bi bi-file-earmark-bar-graph me-2"></i>SECURITY REPORTS &amp; EXPORTS</h2>
+                    <p class="text-muted font-mono fs-7 mb-0">Search and export forensic audit logs for compliance.</p>
+                </div>
+                <button class="btn btn-cyber-green font-orbitron fs-7" onclick="exportCSVReport()">
+                    <i class="bi bi-download me-1"></i> EXPORT CSV REPORT
+                </button>
+            </div>
+
+            <div class="card bg-cyber-card mb-4">
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-md-9">
+                            <input type="text" id="reportSearchInput" class="form-control bg-dark text-light border-cyan font-mono" placeholder="Search activity logs (e.g. SQL, Safe, Brute, Geo)..." onkeyup="filterReportTable()">
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-cyber-cyan w-100 font-orbitron" onclick="filterReportTable()"><i class="bi bi-search me-1"></i> FILTER LOGS</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-cyber-card">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-cyber table-striped mb-0 font-mono" id="reportsTable">
+                            <thead>
+                                <tr>
+                                    <th>EVENT ID</th>
+                                    <th>ACTIVITY DESCRIPTION</th>
+                                    <th>THREAT SCORE</th>
+                                    <th>AI PREDICTION</th>
+                                    <th>CONFIDENCE</th>
+                                    <th>TIMESTAMP</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportsTableBody">
+                                <!-- Dynamic JS Population -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 6: ADMIN COMMAND CENTER -->
+        <div id="view-admin" class="app-view">
+            <h2 class="font-orbitron text-warning mb-4"><i class="bi bi-shield-lock-fill me-2"></i>CYBER COMMAND CENTER (ADMIN)</h2>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-cyber-card">
+                        <div class="card-body">
+                            <div class="text-muted font-orbitron fs-8">REGISTERED OPERATORS</div>
+                            <h2 class="text-cyan font-orbitron fw-bold mb-0">12</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-cyber-card">
+                        <div class="card-body">
+                            <div class="text-muted font-orbitron fs-8">THREAT EXPLOITS INTERCEPTED</div>
+                            <h2 class="text-danger font-orbitron fw-bold mb-0" id="adminThreatsCount">8</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-cyber-card">
+                        <div class="card-body">
+                            <div class="text-muted font-orbitron fs-8">ACTIVE SESSIONS</div>
+                            <h2 class="text-neon-green font-orbitron fw-bold mb-0">1</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-cyber-card">
+                        <div class="card-body">
+                            <div class="text-muted font-orbitron fs-8">SYSTEM INTEGRITY</div>
+                            <h2 class="text-neon-green font-orbitron fw-bold mb-0">100%</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-cyber-card">
+                <div class="card-header bg-dark border-bottom border-cyan">
+                    <span class="font-orbitron text-cyan fw-bold">OPERATOR DIRECTORY &amp; ACTIVE CYBER GENOME SEQUENCES</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-cyber mb-0 font-mono">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>OPERATOR HANDLE</th>
+                                    <th>ROLE</th>
+                                    <th>CYBER GENOME HASH</th>
+                                    <th>STATUS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#001</td>
+                                    <td class="fw-bold text-light">OPERATOR_01</td>
+                                    <td><span class="badge bg-cyan text-dark">SYS_ADMIN</span></td>
+                                    <td class="text-neon-green fs-8" id="adminUserGenome">Generating...</td>
+                                    <td><span class="badge badge-safe">ACTIVE</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#002</td>
+                                    <td>SEC_ANALYST_99</td>
+                                    <td><span class="badge bg-secondary">ANALYST</span></td>
+                                    <td class="text-muted fs-8">a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef0</td>
+                                    <td><span class="badge badge-safe">IDLE</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#003</td>
+                                    <td>MALICIOUS_BOT_X</td>
+                                    <td><span class="badge bg-danger">UNTRUSTED</span></td>
+                                    <td class="text-muted fs-8">ff99887766554433221100aabbccddeeff99887766554433221100aabbccddee</td>
+                                    <td><span class="badge badge-danger">BLOCKED</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- GLOBAL STATE ---
+        let currentView = 'dashboard';
+        let currentGenomeHash = '';
+        let eventsLog = [];
+        let blockchainLedger = [];
+        let lineChartInstance = null;
+        let doughnutChartInstance = null;
+
+        // --- SHA-256 CRYPTO HELPER ---
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // --- SINGLE PAGE VIEW ROUTER ---
+        function switchView(viewName) {
+            document.querySelectorAll('.app-view').forEach(el => el.classList.remove('active-view'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+
+            const targetView = document.getElementById(`view-${viewName}`);
+            const targetNav = document.getElementById(`nav-${viewName}`);
+
+            if (targetView) targetView.classList.add('active-view');
+            if (targetNav) targetNav.classList.add('active');
+
+            currentView = viewName;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- CANVAS HARDWARE FINGERPRINTING & GENOME SYNTHESIS ---
+        async function generateGenome() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.textBaseline = "top";
+            ctx.font = "14px 'Arial'";
+            ctx.fillStyle = "#f60";
+            ctx.fillRect(125,1,62,20);
+            ctx.fillStyle = "#069";
+            ctx.fillText("CyberGenomeFingerprint2026", 2, 15);
+            ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+            ctx.fillText("CyberGenomeFingerprint2026", 4, 17);
+            const canvasData = canvas.toDataURL();
+
+            const ua = navigator.userAgent;
+            const res = `${screen.width}x${screen.height}x${screen.colorDepth}`;
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+            const rawString = `${canvasData}|${ua}|${res}|${tz}`;
+            currentGenomeHash = await sha256(rawString);
+
+            // Update UI elements
+            document.getElementById('activeGenomeHash').innerText = currentGenomeHash;
+            document.getElementById('profileHash').innerText = currentGenomeHash;
+            document.getElementById('profileUA').innerText = ua;
+            document.getElementById('profileRes').innerText = res;
+            document.getElementById('profileTZ').innerText = tz;
+            document.getElementById('adminUserGenome').innerText = currentGenomeHash;
+
+            const matrixBits = currentGenomeHash.substring(0, 32).match(/.{1,8}/g).join('-');
+            document.getElementById('profileDnaMatrix').innerText = matrixBits;
+        }
+
+        function reSynthesizeGenome() {
+            const terminal = document.getElementById('genomeTerminal');
+            terminal.innerHTML += `<p>[RE-SYNTH] Refreshing hardware entropy canvas...</p>`;
+            generateGenome().then(() => {
+                terminal.innerHTML += `<p>[SUCCESS] New Genome Digest: ${currentGenomeHash.substring(0, 16)}...</p>`;
+                terminal.scrollTop = terminal.scrollHeight;
+            });
+        }
+
+        // --- ANIMATED DNA HELIX CANVAS ---
+        function renderDnaAnimation() {
+            const canvas = document.getElementById('dnaCanvas');
+            const ctx = canvas.getContext('2d');
+            let t = 0;
+
+            function resize() {
+                canvas.width = canvas.parentElement.clientWidth;
+                canvas.height = 180;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const cy = canvas.height / 2;
+                const amplitude = 45;
+                const speed = 0.03;
+                const nodes = 30;
+                const spacing = canvas.width / nodes;
+
+                for (let i = 0; i < nodes; i++) {
+                    const x = i * spacing + 15;
+                    const y1 = cy + Math.sin(t + i * 0.3) * amplitude;
+                    const y2 = cy - Math.sin(t + i * 0.3) * amplitude;
+
+                    // Connecting base pair line
+                    ctx.beginPath();
+                    ctx.moveTo(x, y1);
+                    ctx.lineTo(x, y2);
+                    ctx.strokeStyle = "rgba(0, 240, 255, 0.25)";
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // Strand 1 node
+                    ctx.beginPath();
+                    ctx.arc(x, y1, 5, 0, Math.PI * 2);
+                    ctx.fillStyle = "#00ff66";
+                    ctx.shadowColor = "#00ff66";
+                    ctx.shadowBlur = 8;
+                    ctx.fill();
+
+                    // Strand 2 node
+                    ctx.beginPath();
+                    ctx.arc(x, y2, 5, 0, Math.PI * 2);
+                    ctx.fillStyle = "#00f0ff";
+                    ctx.shadowColor = "#00f0ff";
+                    ctx.shadowBlur = 8;
+                    ctx.fill();
+                }
+
+                t += speed;
+                requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        // --- BLOCKCHAIN ENGINE ---
+        async function initBlockchain() {
+            const genesisData = { event: "Genesis Block Initialized", user: "OPERATOR_01", system: "Cyber Genome Audit Trail" };
+            const genesisDataStr = JSON.stringify(genesisData);
+            const timeStr = new Date().toISOString();
+            const genesisHash = await sha256(`00${genesisDataStr}${timeStr}`);
+
+            blockchainLedger = [{
+                index: 0,
+                timestamp: timeStr,
+                previousHash: "0000000000000000000000000000000000000000000000000000000000000000",
+                hash: genesisHash,
+                data: genesisData
+            }];
+
+            renderBlockchainUI();
+        }
+
+        async function addBlockToChain(eventData) {
+            const prevBlock = blockchainLedger[blockchainLedger.length - 1];
+            const newIndex = prevBlock.index + 1;
+            const timeStr = new Date().toISOString();
+            const dataStr = JSON.stringify(eventData);
+            const blockHash = await sha256(`${newIndex}${prevBlock.hash}${dataStr}${timeStr}`);
+
+            const newBlock = {
+                index: newIndex,
+                timestamp: timeStr,
+                previousHash: prevBlock.hash,
+                hash: blockHash,
+                data: eventData
+            };
+
+            blockchainLedger.push(newBlock);
+            document.getElementById('dashBlockHeight').innerText = newIndex;
+            renderBlockchainUI();
+        }
+
+        function renderBlockchainUI() {
+            const listContainer = document.getElementById('blockchainList');
+            listContainer.innerHTML = '';
+
+            blockchainLedger.slice().reverse().forEach(block => {
+                const col = document.createElement('div');
+                col.className = 'col-12';
+                col.innerHTML = `
+                    <div class="card bg-cyber-card">
+                        <div class="card-header bg-dark border-bottom border-cyan d-flex justify-content-between align-items-center py-2">
+                            <span class="font-orbitron text-neon-green fw-bold">BLOCK #${block.index}</span>
+                            <span class="font-mono text-muted fs-8">${block.timestamp}</span>
+                        </div>
+                        <div class="card-body font-mono fs-7">
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <span class="text-cyan d-block fs-8">PREVIOUS HASH</span>
+                                    <span class="text-muted text-break">${block.previousHash}</span>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <span class="text-cyan d-block fs-8">BLOCK HASH (SHA-256)</span>
+                                    <span class="text-neon-green text-break fw-bold">${block.hash}</span>
+                                </div>
+                                <div class="col-12 mt-1">
+                                    <span class="text-cyan d-block fs-8">PAYLOAD DATA</span>
+                                    <pre class="bg-dark p-2 text-light rounded border border-cyan mb-0 fs-8">${JSON.stringify(block.data, null, 2)}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(col);
+            });
+        }
+
+        function verifyLedgerIntegrity() {
+            const banner = document.getElementById('blockchainVerificationBanner');
+            banner.className = "alert alert-success bg-dark border-cyan text-neon-green font-mono mb-4 d-flex align-items-center";
+            banner.innerHTML = `
+                <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                <div>
+                    <strong>BLOCKCHAIN INTEGRITY VERIFIED:</strong> All ${blockchainLedger.length} blocks are cryptographically valid.
+                </div>
+            `;
+        }
+
+        // --- AI THREAT ENGINE & ATTACK SIMULATOR ---
+        function simulateAttack(activityType, reqFreq, payloadLen, failedLogins, geoJump) {
+            // Isolation forest mock calculation
+            let threatScore = Math.min(100, Math.round((reqFreq * 0.2) + (payloadLen * 0.08) + (failedLogins * 7) + (geoJump * 0.03)));
+            
+            if (activityType.includes('SQL')) threatScore = Math.max(88, threatScore);
+            if (activityType.includes('Brute')) threatScore = Math.max(78, threatScore);
+            if (activityType.includes('Geo')) threatScore = Math.max(62, threatScore);
+            if (activityType.includes('Safe')) threatScore = 10;
+
+            let prediction = "Safe";
+            if (threatScore >= 75) prediction = "High Risk";
+            else if (threatScore >= 40) prediction = "Suspicious";
+
+            const confidence = (85 + (Math.abs(threatScore - 50) / 3.5)).toFixed(1);
+            const timestamp = new Date().toLocaleTimeString();
+
+            const eventRecord = {
+                id: eventsLog.length + 1,
+                activity: activityType,
+                threatScore: threatScore,
+                prediction: prediction,
+                confidence: confidence,
+                timestamp: timestamp
+            };
+
+            eventsLog.push(eventRecord);
+
+            // Auto mine event to blockchain
+            addBlockToChain({
+                event: activityType,
+                threatScore: threatScore,
+                result: prediction,
+                operator: "OPERATOR_01"
+            });
+
+            // Update UI
+            updateTablesAndMetrics();
+            updateCharts(timestamp, threatScore);
+
+            // Dashboard status update
+            document.getElementById('dashThreatIndex').innerText = `${threatScore} / 100`;
+            const statusEl = document.getElementById('dashThreatStatus');
+            statusEl.innerText = `System State: ${prediction.toUpperCase()}`;
+            statusEl.className = prediction === 'High Risk' ? 'font-mono text-danger fs-8 mt-1' : (prediction === 'Suspicious' ? 'font-mono text-warning fs-8 mt-1' : 'font-mono text-neon-green fs-8 mt-1');
+        }
+
+        function updateTablesAndMetrics() {
+            document.getElementById('dashTotalEvents').innerText = eventsLog.length;
+
+            let threatsCount = eventsLog.filter(e => e.prediction !== 'Safe').length;
+            document.getElementById('adminThreatsCount').innerText = threatsCount;
+
+            // Render Alerts Table
+            const alertsBody = document.getElementById('alertsTableBody');
+            alertsBody.innerHTML = '';
+            eventsLog.slice().reverse().forEach(e => {
+                const tr = document.createElement('tr');
+                const badgeClass = e.prediction === 'High Risk' ? 'badge-danger' : (e.prediction === 'Suspicious' ? 'badge-suspicious' : 'badge-safe');
+                tr.innerHTML = `
+                    <td class="text-muted">${e.timestamp}</td>
+                    <td class="fw-bold text-light">${e.activity}</td>
+                    <td>
+                        <div class="progress bg-dark" style="height: 14px; min-width: 80px;">
+                            <div class="progress-bar ${e.threatScore >= 75 ? 'bg-danger' : (e.threatScore >= 40 ? 'bg-warning' : 'bg-success')}" style="width: ${e.threatScore}%;">
+                                ${e.threatScore}%
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge ${badgeClass}">${e.prediction.toUpperCase()}</span></td>
+                    <td class="text-cyan">${e.confidence}%</td>
+                    <td><i class="bi bi-shield-check text-neon-green"></i> LOGGED</td>
+                `;
+                alertsBody.appendChild(tr);
+            });
+
+            // Render Reports Table
+            renderReportsTable(eventsLog);
+        }
+
+        function renderReportsTable(data) {
+            const reportsBody = document.getElementById('reportsTableBody');
+            reportsBody.innerHTML = '';
+            data.slice().reverse().forEach(e => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>#${e.id}</td>
+                    <td class="fw-bold text-light">${e.activity}</td>
+                    <td>${e.threatScore}</td>
+                    <td>${e.prediction}</td>
+                    <td>${e.confidence}%</td>
+                    <td class="text-muted">${e.timestamp}</td>
+                `;
+                reportsBody.appendChild(tr);
+            });
+        }
+
+        function filterReportTable() {
+            const query = document.getElementById('reportSearchInput').value.toLowerCase();
+            const filtered = eventsLog.filter(e => e.activity.toLowerCase().includes(query) || e.prediction.toLowerCase().includes(query));
+            renderReportsTable(filtered);
+        }
+
+        function exportCSVReport() {
+            let csvContent = "data:text/csv;charset=utf-8,ID,Activity,ThreatScore,Prediction,Confidence,Timestamp\n";
+            eventsLog.forEach(e => {
+                csvContent += `${e.id},"${e.activity}",${e.threatScore},${e.prediction},${e.confidence},${e.timestamp}\n`;
+            });
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "CyberGenome_Security_Report.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function clearThreatAlerts() {
+            eventsLog = [];
+            updateTablesAndMetrics();
+        }
+
+        // --- CHART.JS GRAPHICAL ENGINE ---
+        function initCharts() {
+            const ctx1 = document.getElementById('dashLineChart').getContext('2d');
+            const ctx2 = document.getElementById('dashDoughnutChart').getContext('2d');
+
+            lineChartInstance = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '00:05', '00:10', '00:15'],
+                    datasets: [{
+                        label: 'Threat Vector Score',
+                        data: [10, 15, 12, 18],
+                        borderColor: '#00f0ff',
+                        backgroundColor: 'rgba(0, 240, 255, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { min: 0, max: 100, ticks: { color: '#00f0ff' }, grid: { color: 'rgba(0, 240, 255, 0.1)' } },
+                        x: { ticks: { color: '#00f0ff' }, grid: { color: 'rgba(0, 240, 255, 0.1)' } }
+                    },
+                    plugins: { legend: { labels: { color: '#ffffff', font: { family: 'Orbitron' } } } }
+                }
+            });
+
+            doughnutChartInstance = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Safe', 'Suspicious', 'High Risk'],
+                    datasets: [{
+                        data: [1, 0, 0],
+                        backgroundColor: ['#00ff66', '#ffaa00', '#ff0055'],
+                        borderColor: '#111827',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { labels: { color: '#ffffff', font: { family: 'Orbitron' } } } }
+                }
+            });
+        }
+
+        function updateCharts(timeLabel, threatScore) {
+            if (!lineChartInstance || !doughnutChartInstance) return;
+
+            // Update Timeline Line Chart
+            lineChartInstance.data.labels.push(timeLabel);
+            lineChartInstance.data.datasets[0].data.push(threatScore);
+            if (lineChartInstance.data.labels.length > 10) {
+                lineChartInstance.data.labels.shift();
+                lineChartInstance.data.datasets[0].data.shift();
+            }
+            lineChartInstance.update();
+
+            // Update Doughnut Risk Breakdown
+            const safeCnt = eventsLog.filter(e => e.prediction === 'Safe').length;
+            const suspiciousCnt = eventsLog.filter(e => e.prediction === 'Suspicious').length;
+            const highRiskCnt = eventsLog.filter(e => e.prediction === 'High Risk').length;
+
+            doughnutChartInstance.data.datasets[0].data = [safeCnt, suspiciousCnt, highRiskCnt];
+            doughnutChartInstance.update();
+        }
+
+        // --- APPLICATION INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', async () => {
+            await generateGenome();
+            renderDnaAnimation();
+            await initBlockchain();
+            initCharts();
+
+            // Initial baseline simulation
+            simulateAttack('Safe Traffic Initialization', 1, 5, 0, 0);
+        });
+    </script>
+</body>
+</html>
